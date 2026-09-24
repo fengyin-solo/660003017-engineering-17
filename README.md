@@ -1,5 +1,13 @@
 # solo-6600030: 有限元应力热力图可视化
 
+## 共用构建参数
+端口、代理前缀/后端地址、构建输出目录、样例数据文件路径统一收拢在
+`frontend/build.config.ts`，`vite.config.ts`（dev 启动与 build）和前端
+运行时（经 `virtual:sample-data` 虚拟模块加载 `src/data/sample-models.json`）
+都从这一份定义取值。修改发布地址或新增参数只改这一个文件；
+取值超出允许范围（端口 1024–65535、后端地址需 http(s)、输出目录须为项目内
+相对路径、样例文件须为 .json）时会在启动/构建时报错并说明原因。
+
 ## 技术栈
 - Vue 3 + TypeScript + Vite + Pinia + Tailwind CSS + Canvas 2D
 

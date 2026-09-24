@@ -4,11 +4,12 @@ import FEACanvas from './components/FEACanvas.vue';
 import ElementInfo from './components/ElementInfo.vue';
 import MeshControls from './components/MeshControls.vue';
 import { useFEAStore } from './store/fea';
+import { sampleData } from './utils/sample-data';
 
 const store = useFEAStore();
 
 onMounted(() => {
-  store.loadPreset('cantilever');
+  store.loadPreset(sampleData.defaultPreset);
 });
 </script>
 

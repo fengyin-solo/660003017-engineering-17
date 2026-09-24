@@ -1,18 +1,13 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import type { FEAModel, FEAResult } from '../types';
-import {
-  solve as feaSolve,
-  presetCantileverBeam,
-  presetBridgeTruss,
-  presetSimpleFrame,
-  jetColormap,
-} from '../utils/fea-solver';
+import { solve as feaSolve, jetColormap } from '../utils/fea-solver';
+import { sampleData, buildSampleModel } from '../utils/sample-data';
 
 export const useFEAStore = defineStore('fea', () => {
   const model = ref<FEAModel>({ nodes: [], elements: [], loads: [] });
   const result = ref<FEAResult | null>(null);
-  const selectedPreset = ref<string>('cantilever');
+  const selectedPreset = ref<string>(sampleData.defaultPreset);
   const showDeformed = ref(false);
   const deformationScale = ref(10);
   const selectedElement = ref<number | null>(null);
@@ -20,22 +15,12 @@ export const useFEAStore = defineStore('fea', () => {
 
   // ─── Actions ──────────────────────────────────────────────────────────────
   function loadPreset(name: string) {
-    selectedPreset.value = name;
+    const presetKeys = sampleData.presets.map((p) => p.key);
+    const key = presetKeys.includes(name) ? name : sampleData.defaultPreset;
+    selectedPreset.value = key;
     result.value = null;
     selectedElement.value = null;
-    switch (name) {
-      case 'cantilever':
-        model.value = presetCantileverBeam();
-        break;
-      case 'bridge':
-        model.value = presetBridgeTruss();
-        break;
-      case 'frame':
-        model.value = presetSimpleFrame();
-        break;
-      default:
-        model.value = presetCantileverBeam();
-    }
+    model.value = buildSampleModel(key);
   }
 
   function solve() {

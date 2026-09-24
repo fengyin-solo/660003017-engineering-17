@@ -328,25 +328,38 @@ export function buildBridgeTruss(
   return model;
 }
 
-// ─── Preset Models ──────────────────────────────────────────────────────────
-export const presetCantileverBeam = (): FEAModel => buildCantileverBeam(4, 1, 8);
-export const presetBridgeTruss = (): FEAModel => buildBridgeTruss(10, 2, 10);
-export const presetSimpleFrame = (): FEAModel => {
-  const model = buildTrussBeam(3, 3, 4, 4);
+export function buildSimpleFrame(
+  width: number,
+  height: number,
+  nDivX: number,
+  nDivY: number
+): FEAModel {
+  const model = buildTrussBeam(width, height, nDivX, nDivY);
   // Fix bottom row
   for (const node of model.nodes) {
     if (node.y === 0) node.fixed = true;
   }
   // Apply load at top center
   const topCenter = model.nodes.reduce((best, n) => {
-    if (n.y !== 3) return best;
+    if (n.y !== height) return best;
     if (!best) return n;
-    return Math.abs(n.x - 1.5) < Math.abs(best.x - 1.5) ? n : best;
+    return Math.abs(n.x - width / 2) < Math.abs(best.x - width / 2) ? n : best;
   }, null as Node | null);
   if (topCenter) {
     model.loads.push({ nodeId: topCenter.id, fx: 5000, fy: -20000 });
   }
   return model;
+}
+
+// ─── Sample Model Builders ────────────────────────────────────────────────────
+// 入参来自 src/data/sample-models.json（路径统一在 build.config.ts 中声明）。
+type SampleBuilder = (...params: number[]) => FEAModel;
+
+/** 样例数据 JSON 中的 builder 名称 -> 构建函数 */
+export const sampleBuilders: Record<string, SampleBuilder> = {
+  cantilever: buildCantileverBeam,
+  bridge: buildBridgeTruss,
+  frame: buildSimpleFrame,
 };
 
 // ─── Jet Colormap ───────────────────────────────────────────────────────────

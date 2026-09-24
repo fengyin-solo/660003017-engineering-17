@@ -1,0 +1,23 @@
+{
+  "defaultPreset": "cantilever",
+  "presets": [
+    {
+      "key": "cantilever",
+      "label": "悬臂梁",
+      "builder": "cantilever",
+      "params": [4, 1, 8]
+    },
+    {
+      "key": "bridge",
+      "label": "桥梁桁架",
+      "builder": "bridge",
+      "params": [10, 2, 10]
+    },
+    {
+      "key": "frame",
+      "label": "简单框架",
+      "builder": "frame",
+      "params": [3, 3, 4, 4]
+    }
+  ]
+}

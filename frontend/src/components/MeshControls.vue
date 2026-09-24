@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useFEAStore } from '../store/fea';
+import { sampleData } from '../utils/sample-data';
 
 const store = useFEAStore();
 </script>
@@ -15,25 +16,13 @@ const store = useFEAStore();
       <div class="text-xs text-slate-400 mb-1">预设模型</div>
       <div class="grid grid-cols-3 gap-1">
         <button
-          @click="store.loadPreset('cantilever')"
-          :class="store.selectedPreset === 'cantilever' ? 'bg-sky-700 text-white' : 'bg-slate-700 text-slate-400'"
+          v-for="preset in sampleData.presets"
+          :key="preset.key"
+          @click="store.loadPreset(preset.key)"
+          :class="store.selectedPreset === preset.key ? 'bg-sky-700 text-white' : 'bg-slate-700 text-slate-400'"
           class="py-1.5 rounded text-[10px] font-medium hover:opacity-90 transition"
         >
-          悬臂梁
-        </button>
-        <button
-          @click="store.loadPreset('bridge')"
-          :class="store.selectedPreset === 'bridge' ? 'bg-sky-700 text-white' : 'bg-slate-700 text-slate-400'"
-          class="py-1.5 rounded text-[10px] font-medium hover:opacity-90 transition"
-        >
-          桥梁桁架
-        </button>
-        <button
-          @click="store.loadPreset('frame')"
-          :class="store.selectedPreset === 'frame' ? 'bg-sky-700 text-white' : 'bg-slate-700 text-slate-400'"
-          class="py-1.5 rounded text-[10px] font-medium hover:opacity-90 transition"
-        >
-          简单框架
+          {{ preset.label }}
         </button>
       </div>
     </div>
